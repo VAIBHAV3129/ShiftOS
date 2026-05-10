@@ -8,8 +8,11 @@ LDFLAGS := -nostdlib
 
 BUILD_DIR := build
 OBJ_DIR := $(BUILD_DIR)/obj
+BOOT_DIR := src/boot
+LIMINE_DIR := limine
 
 KERNEL_ELF := $(BUILD_DIR)/shiftos.elf
+LIMINE_CFG := $(BOOT_DIR)/limine.cfg
 
 C_SOURCES := src/kernel/main.c
 ASM_SOURCES := src/arch/x86_64/boot.asm
@@ -31,7 +34,13 @@ $(OBJ_DIR)/%.o: src/%.asm
 	@mkdir -p $(dir $@)
 	$(NASM) -f elf64 $< -o $@
 
+iso: $(KERNEL_ELF)
+	@mkdir -p $(BUILD_DIR)/iso/boot
+	cp $(KERNEL_ELF) $(BUILD_DIR)/iso/boot/shiftos.elf
+	cp $(LIMINE_CFG) $(BUILD_DIR)/iso/limine.cfg
+	@echo "ISO staging complete. Add Limine binaries in ./limine before making a bootable ISO."
+
 clean:
 	rm -rf $(BUILD_DIR)
 
-.PHONY: all clean
+.PHONY: all clean iso
