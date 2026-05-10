@@ -16,7 +16,8 @@ KERNEL_MAP := $(BUILD_DIR)/shiftos.map
 LIMINE_CFG := $(BOOT_DIR)/limine.cfg
 
 C_SOURCES := src/kernel/main.c \
-             src/kernel/panic.c
+             src/kernel/panic.c \
+             src/kernel/limine.c
 
 ASM_SOURCES := src/arch/x86_64/boot.asm
 
