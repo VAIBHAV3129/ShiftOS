@@ -1,6 +1,7 @@
 #include "types.h"
+#include "compiler.h"
 
-__attribute__((sysv_abi))
+SHIFTOS_NORETURN SHIFTOS_CALL
 void kmain(void) {
     for (;;) {
         __asm__ __volatile__("hlt");
