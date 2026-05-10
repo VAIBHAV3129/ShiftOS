@@ -2,6 +2,7 @@
 #include "compiler.h"
 #include "boot.h"
 #include "panic.h"
+#include "limine.h"
 
 SHIFTOS_NORETURN SHIFTOS_CALL
 void kmain(void) {
