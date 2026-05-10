@@ -30,6 +30,10 @@ SECTIONS
         __bss_end = .;
     }
 
+    .limine_reqs : {
+        KEEP(*(.limine_reqs))
+    }
+
     __kernel_end = .;
 
     /DISCARD/ : {
