@@ -3,8 +3,8 @@ CC := x86_64-elf-gcc
 LD := x86_64-elf-ld
 NASM := nasm
 
-CFLAGS := -ffreestanding -fno-stack-protector -mno-red-zone -m64 -nostdlib -Wall -Wextra
-LDFLAGS := -nostdlib
+CFLAGS := -ffreestanding -fno-builtin -fno-stack-protector -fno-pic -mno-red-zone -m64 -nostdlib -Wall -Wextra -O2 -g
+LDFLAGS := -nostdlib -T linker.ld -z max-page-size=0x1000
 
 BUILD_DIR := build
 OBJ_DIR := $(BUILD_DIR)/obj
@@ -12,6 +12,7 @@ BOOT_DIR := src/boot
 LIMINE_DIR := limine
 
 KERNEL_ELF := $(BUILD_DIR)/shiftos.elf
+KERNEL_MAP := $(BUILD_DIR)/shiftos.map
 LIMINE_CFG := $(BOOT_DIR)/limine.cfg
 
 C_SOURCES := src/kernel/main.c
@@ -24,7 +25,7 @@ all: $(KERNEL_ELF)
 
 $(KERNEL_ELF): $(C_OBJS) $(ASM_OBJS) linker.ld
 	@mkdir -p $(BUILD_DIR)
-	$(LD) $(LDFLAGS) -T linker.ld -o $@ $(ASM_OBJS) $(C_OBJS)
+	$(LD) $(LDFLAGS) -Map $(KERNEL_MAP) -o $@ $(ASM_OBJS) $(C_OBJS)
 
 $(OBJ_DIR)/%.o: src/%.c
 	@mkdir -p $(dir $@)
