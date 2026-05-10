@@ -1,6 +1,7 @@
 #include "types.h"
 #include "compiler.h"
 #include "boot.h"
+#include "panic.h"
 
 SHIFTOS_NORETURN SHIFTOS_CALL
 void kmain(void) {
@@ -15,7 +16,5 @@ void kmain(void) {
     (void)&__bss_start;
     (void)&__bss_end;
 
-    for (;;) {
-        __asm__ __volatile__("hlt");
-    }
+    kpanic("kmain idle");
 }
