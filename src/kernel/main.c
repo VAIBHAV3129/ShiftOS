@@ -3,6 +3,7 @@
 #include "boot.h"
 #include "panic.h"
 #include "limine.h"
+#include "bootinfo.h"
 
 SHIFTOS_NORETURN SHIFTOS_CALL
 void kmain(void) {
@@ -16,6 +17,10 @@ void kmain(void) {
     (void)&__data_end;
     (void)&__bss_start;
     (void)&__bss_end;
+
+    if (!bootinfo_init()) {
+        kpanic("no framebuffer");
+    }
 
     kpanic("kmain idle");
 }
