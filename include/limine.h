@@ -47,4 +47,7 @@ struct limine_framebuffer_request {
     struct limine_framebuffer_response *response;
 };
 
+extern volatile struct limine_base_revision_request limine_base_revision_request;
+extern volatile struct limine_framebuffer_request limine_framebuffer_request;
+
 #endif
