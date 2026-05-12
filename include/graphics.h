@@ -15,5 +15,6 @@ struct gfx_context {
 SHIFTOS_CALL int gfx_init(void);
 SHIFTOS_CALL void gfx_clear(u32 color);
 SHIFTOS_CALL void gfx_put_pixel(u64 x, u64 y, u32 color);
+SHIFTOS_CALL void gfx_fill_rect(u64 x, u64 y, u64 w, u64 h, u32 color);
 
 #endif
