@@ -18,7 +18,8 @@ LIMINE_CFG := $(BOOT_DIR)/limine.cfg
 C_SOURCES := src/kernel/main.c \
              src/kernel/panic.c \
              src/kernel/limine.c \
-             src/kernel/bootinfo.c
+             src/kernel/bootinfo.c \
+             src/kernel/graphics.c
 
 ASM_SOURCES := src/arch/x86_64/boot.asm
 
