@@ -40,3 +40,27 @@ SHIFTOS_CALL void gfx_clear(u32 color) {
         }
     }
 }
+
+SHIFTOS_CALL void gfx_fill_rect(u64 x, u64 y, u64 w, u64 h, u32 color) {
+    if (x >= g_gfx.width || y >= g_gfx.height) {
+        return;
+    }
+
+    u64 max_x = x + w;
+    u64 max_y = y + h;
+
+    if (max_x > g_gfx.width) {
+        max_x = g_gfx.width;
+    }
+    if (max_y > g_gfx.height) {
+        max_y = g_gfx.height;
+    }
+
+    u64 pixels_per_row = g_gfx.pitch / 4;
+    for (u64 yy = y; yy < max_y; ++yy) {
+        u64 row = yy * pixels_per_row;
+        for (u64 xx = x; xx < max_x; ++xx) {
+            g_gfx.buffer[row + xx] = color;
+        }
+    }
+}
