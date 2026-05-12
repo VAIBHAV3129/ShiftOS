@@ -4,6 +4,7 @@
 #include "panic.h"
 #include "limine.h"
 #include "bootinfo.h"
+#include "graphics.h"
 
 SHIFTOS_NORETURN SHIFTOS_CALL
 void kmain(void) {
@@ -21,6 +22,12 @@ void kmain(void) {
     if (!bootinfo_init()) {
         kpanic("no framebuffer");
     }
+
+    if (!gfx_init()) {
+        kpanic("gfx init failed");
+    }
+
+    gfx_clear(0x00102030);
 
     kpanic("kmain idle");
 }
