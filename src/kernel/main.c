@@ -28,6 +28,9 @@ void kmain(void) {
     }
 
     gfx_clear(0x00102030);
+    gfx_fill_rect(40, 40, 240, 120, 0x00FF7A18);
+    gfx_fill_rect(320, 80, 200, 160, 0x003BA7FF);
+    gfx_fill_rect(600, 140, 280, 180, 0x00953BFF);
 
     kpanic("kmain idle");
 }
