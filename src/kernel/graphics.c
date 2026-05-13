@@ -64,3 +64,52 @@ SHIFTOS_CALL void gfx_fill_rect(u64 x, u64 y, u64 w, u64 h, u32 color) {
         }
     }
 }
+
+SHIFTOS_CALL void gfx_draw_line(u64 x0, u64 y0, u64 x1, u64 y1, u32 color) {
+    s64 dx = (s64)x1 - (s64)x0;
+    s64 dy = (s64)y1 - (s64)y0;
+
+    s64 sx = (dx >= 0) ? 1 : -1;
+    s64 sy = (dy >= 0) ? 1 : -1;
+
+    s64 adx = (dx >= 0) ? dx : -dx;
+    s64 ady = (dy >= 0) ? dy : -dy;
+
+    s64 err = (adx > ady ? adx : -ady) / 2;
+    s64 x = (s64)x0;
+    s64 y = (s64)y0;
+
+    for (;;) {
+        if (x >= 0 && y >= 0) {
+            gfx_put_pixel((u64)x, (u64)y, color);
+        }
+
+        if (x == (s64)x1 && y == (s64)y1) {
+            break;
+        }
+
+        s64 e2 = err;
+        if (e2 > -adx) {
+            err -= ady;
+            x += sx;
+        }
+        if (e2 < ady) {
+            err += adx;
+            y += sy;
+        }
+    }
+}
+
+SHIFTOS_CALL void gfx_draw_rect(u64 x, u64 y, u64 w, u64 h, u32 color) {
+    if (w == 0 || h == 0) {
+        return;
+    }
+
+    u64 x2 = x + w - 1;
+    u64 y2 = y + h - 1;
+
+    gfx_draw_line(x, y, x2, y, color);
+    gfx_draw_line(x, y2, x2, y2, color);
+    gfx_draw_line(x, y, x, y2, color);
+    gfx_draw_line(x2, y, x2, y2, color);
+}
