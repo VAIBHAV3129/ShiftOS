@@ -1,5 +1,6 @@
 #include "graphics.h"
 #include "bootinfo.h"
+#include "color.h"
 
 static struct gfx_context g_gfx;
 
@@ -29,6 +30,17 @@ SHIFTOS_CALL void gfx_put_pixel(u64 x, u64 y, u32 color) {
 
     u64 pixels_per_row = g_gfx.pitch / 4;
     g_gfx.buffer[y * pixels_per_row + x] = color;
+}
+
+SHIFTOS_CALL void gfx_put_pixel_alpha(u64 x, u64 y, u32 color) {
+    if (x >= g_gfx.width || y >= g_gfx.height) {
+        return;
+    }
+
+    u64 pixels_per_row = g_gfx.pitch / 4;
+    u64 idx = y * pixels_per_row + x;
+    u32 dst = g_gfx.buffer[idx];
+    g_gfx.buffer[idx] = color_blend(color, dst);
 }
 
 SHIFTOS_CALL void gfx_clear(u32 color) {
@@ -61,6 +73,32 @@ SHIFTOS_CALL void gfx_fill_rect(u64 x, u64 y, u64 w, u64 h, u32 color) {
         u64 row = yy * pixels_per_row;
         for (u64 xx = x; xx < max_x; ++xx) {
             g_gfx.buffer[row + xx] = color;
+        }
+    }
+}
+
+SHIFTOS_CALL void gfx_fill_rect_alpha(u64 x, u64 y, u64 w, u64 h, u32 color) {
+    if (x >= g_gfx.width || y >= g_gfx.height) {
+        return;
+    }
+
+    u64 max_x = x + w;
+    u64 max_y = y + h;
+
+    if (max_x > g_gfx.width) {
+        max_x = g_gfx.width;
+    }
+    if (max_y > g_gfx.height) {
+        max_y = g_gfx.height;
+    }
+
+    u64 pixels_per_row = g_gfx.pitch / 4;
+    for (u64 yy = y; yy < max_y; ++yy) {
+        u64 row = yy * pixels_per_row;
+        for (u64 xx = x; xx < max_x; ++xx) {
+            u64 idx = row + xx;
+            u32 dst = g_gfx.buffer[idx];
+            g_gfx.buffer[idx] = color_blend(color, dst);
         }
     }
 }
