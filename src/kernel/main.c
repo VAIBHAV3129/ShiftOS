@@ -32,5 +32,12 @@ void kmain(void) {
     gfx_fill_rect(320, 80, 200, 160, 0x003BA7FF);
     gfx_fill_rect(600, 140, 280, 180, 0x00953BFF);
 
+    gfx_draw_rect(30, 30, 260, 140, 0x00FFFFFF);
+    gfx_draw_rect(310, 70, 220, 180, 0x00FFFFFF);
+    gfx_draw_rect(590, 130, 300, 200, 0x00FFFFFF);
+
+    gfx_draw_line(0, 0, 400, 300, 0x00FFD700);
+    gfx_draw_line(0, 300, 400, 0, 0x00FFD700);
+
     kpanic("kmain idle");
 }
