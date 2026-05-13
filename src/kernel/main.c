@@ -5,6 +5,7 @@
 #include "limine.h"
 #include "bootinfo.h"
 #include "graphics.h"
+#include "color.h"
 
 SHIFTOS_NORETURN SHIFTOS_CALL
 void kmain(void) {
@@ -27,17 +28,21 @@ void kmain(void) {
         kpanic("gfx init failed");
     }
 
-    gfx_clear(0x00102030);
-    gfx_fill_rect(40, 40, 240, 120, 0x00FF7A18);
-    gfx_fill_rect(320, 80, 200, 160, 0x003BA7FF);
-    gfx_fill_rect(600, 140, 280, 180, 0x00953BFF);
+    
 
-    gfx_draw_rect(30, 30, 260, 140, 0x00FFFFFF);
-    gfx_draw_rect(310, 70, 220, 180, 0x00FFFFFF);
-    gfx_draw_rect(590, 130, 300, 200, 0x00FFFFFF);
+    gfx_clear(color_rgb(16, 32, 48));
+    gfx_fill_rect(40, 40, 240, 120, color_rgb(255, 122, 24));
+    gfx_fill_rect(320, 80, 200, 160, color_rgb(59, 167, 255));
+    gfx_fill_rect(600, 140, 280, 180, color_rgb(149, 59, 255));
 
-    gfx_draw_line(0, 0, 400, 300, 0x00FFD700);
-    gfx_draw_line(0, 300, 400, 0, 0x00FFD700);
+    gfx_draw_rect(30, 30, 260, 140, color_rgb(255, 255, 255));
+    gfx_draw_rect(310, 70, 220, 180, color_rgb(255, 255, 255));
+    gfx_draw_rect(590, 130, 300, 200, color_rgb(255, 255, 255));
+
+    gfx_draw_line(0, 0, 400, 300, color_rgb(255, 215, 0));
+    gfx_draw_line(0, 300, 400, 0, color_rgb(255, 215, 0));
+
+    gfx_fill_rect_alpha(100, 260, 360, 120, color_rgba(0, 0, 0, 96));
 
     kpanic("kmain idle");
 }
