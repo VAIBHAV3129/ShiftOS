@@ -20,5 +20,7 @@ SHIFTOS_CALL void gfx_fill_rect(u64 x, u64 y, u64 w, u64 h, u32 color);
 SHIFTOS_CALL void gfx_fill_rect_alpha(u64 x, u64 y, u64 w, u64 h, u32 color);
 SHIFTOS_CALL void gfx_draw_line(u64 x0, u64 y0, u64 x1, u64 y1, u32 color);
 SHIFTOS_CALL void gfx_draw_rect(u64 x, u64 y, u64 w, u64 h, u32 color);
+SHIFTOS_CALL void gfx_draw_gradient(u64 x, u64 y, u64 w, u64 h, u32 top, u32 bottom);
+SHIFTOS_CALL void gfx_draw_checker(u64 size, u32 c1, u32 c2);
 
 #endif
