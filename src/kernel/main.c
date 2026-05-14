@@ -28,8 +28,11 @@ void kmain(void) {
         kpanic("gfx init failed");
     }
 
+    u64 w = gfx_width();
+    u64 h = gfx_height();
+
     gfx_draw_checker(64, color_rgb(14, 20, 30), color_rgb(20, 28, 40));
-    gfx_draw_gradient(0, 0, 640, 240, color_rgb(24, 90, 180), color_rgb(8, 24, 64));
+    gfx_draw_gradient(0, 0, w, h / 3, color_rgb(24, 90, 180), color_rgb(8, 24, 64));
 
     gfx_fill_rect(40, 40, 240, 120, color_rgb(255, 122, 24));
     gfx_fill_rect(320, 80, 200, 160, color_rgb(59, 167, 255));
@@ -39,10 +42,10 @@ void kmain(void) {
     gfx_draw_rect(310, 70, 220, 180, color_rgb(255, 255, 255));
     gfx_draw_rect(590, 130, 300, 200, color_rgb(255, 255, 255));
 
-    gfx_draw_line(0, 0, 400, 300, color_rgb(255, 215, 0));
-    gfx_draw_line(0, 300, 400, 0, color_rgb(255, 215, 0));
+    gfx_draw_line(0, 0, w / 2, h / 2, color_rgb(255, 215, 0));
+    gfx_draw_line(0, h / 2, w / 2, 0, color_rgb(255, 215, 0));
 
-    gfx_fill_rect_alpha(100, 260, 360, 120, color_rgba(0, 0, 0, 96));
+    gfx_fill_rect_alpha(100, h / 2, 360, 120, color_rgba(0, 0, 0, 96));
 
     kpanic("kmain idle");
 }
