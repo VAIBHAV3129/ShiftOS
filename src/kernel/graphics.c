@@ -151,3 +151,41 @@ SHIFTOS_CALL void gfx_draw_rect(u64 x, u64 y, u64 w, u64 h, u32 color) {
     gfx_draw_line(x, y, x, y2, color);
     gfx_draw_line(x2, y, x2, y2, color);
 }
+
+SHIFTOS_CALL void gfx_draw_gradient(u64 x, u64 y, u64 w, u64 h, u32 top, u32 bottom) {
+    if (w == 0 || h == 0) {
+        return;
+    }
+
+    u32 tr = (top >> 16) & 0xFFu;
+    u32 tg = (top >> 8) & 0xFFu;
+    u32 tb = top & 0xFFu;
+
+    u32 br = (bottom >> 16) & 0xFFu;
+    u32 bg = (bottom >> 8) & 0xFFu;
+    u32 bb = bottom & 0xFFu;
+
+    for (u64 yy = 0; yy < h; ++yy) {
+        u32 r = tr + (u32)((br - tr) * yy / (h - 1));
+        u32 g = tg + (u32)((bg - tg) * yy / (h - 1));
+        u32 b = tb + (u32)((bb - tb) * yy / (h - 1));
+        u32 col = 0xFF000000u | (r << 16) | (g << 8) | b;
+        gfx_fill_rect(x, y + yy, w, 1, col);
+    }
+}
+
+SHIFTOS_CALL void gfx_draw_checker(u64 size, u32 c1, u32 c2) {
+    if (size == 0) {
+        return;
+    }
+
+    u64 tiles_x = (g_gfx.width + size - 1) / size;
+    u64 tiles_y = (g_gfx.height + size - 1) / size;
+
+    for (u64 ty = 0; ty < tiles_y; ++ty) {
+        for (u64 tx = 0; tx < tiles_x; ++tx) {
+            u32 col = ((tx + ty) & 1) ? c1 : c2;
+            gfx_fill_rect(tx * size, ty * size, size, size, col);
+        }
+    }
+}
