@@ -28,9 +28,9 @@ void kmain(void) {
         kpanic("gfx init failed");
     }
 
-    
+    gfx_draw_checker(64, color_rgb(14, 20, 30), color_rgb(20, 28, 40));
+    gfx_draw_gradient(0, 0, 640, 240, color_rgb(24, 90, 180), color_rgb(8, 24, 64));
 
-    gfx_clear(color_rgb(16, 32, 48));
     gfx_fill_rect(40, 40, 240, 120, color_rgb(255, 122, 24));
     gfx_fill_rect(320, 80, 200, 160, color_rgb(59, 167, 255));
     gfx_fill_rect(600, 140, 280, 180, color_rgb(149, 59, 255));
