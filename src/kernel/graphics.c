@@ -197,3 +197,71 @@ SHIFTOS_CALL void gfx_draw_checker(u64 size, u32 c1, u32 c2) {
         }
     }
 }
+
+static void gfx_hline(u64 x, u64 y, u64 w, u32 color) {
+    if (w == 0) {
+        return;
+    }
+    gfx_fill_rect(x, y, w, 1, color);
+}
+
+static void gfx_circle_points(u64 cx, u64 cy, s64 x, s64 y, u32 color) {
+    if (x < 0 || y < 0) {
+        return;
+    }
+
+    gfx_put_pixel(cx + (u64)x, cy + (u64)y, color);
+    gfx_put_pixel(cx + (u64)y, cy + (u64)x, color);
+    if ((s64)cx - x >= 0) gfx_put_pixel(cx - (u64)x, cy + (u64)y, color);
+    if ((s64)cx - y >= 0) gfx_put_pixel(cx - (u64)y, cy + (u64)x, color);
+    if ((s64)cy - y >= 0) gfx_put_pixel(cx + (u64)x, cy - (u64)y, color);
+    if ((s64)cy - x >= 0) gfx_put_pixel(cx + (u64)y, cy - (u64)x, color);
+    if ((s64)cx - x >= 0 && (s64)cy - y >= 0) gfx_put_pixel(cx - (u64)x, cy - (u64)y, color);
+    if ((s64)cx - y >= 0 && (s64)cy - x >= 0) gfx_put_pixel(cx - (u64)y, cy - (u64)x, color);
+}
+
+SHIFTOS_CALL void gfx_draw_circle(u64 cx, u64 cy, u64 r, u32 color) {
+    if (r == 0) {
+        gfx_put_pixel(cx, cy, color);
+        return;
+    }
+
+    s64 x = (s64)r;
+    s64 y = 0;
+    s64 err = 0;
+
+    while (x >= y) {
+        gfx_circle_points(cx, cy, x, y, color);
+        y++;
+        err += 2 * y + 1;
+        if (err > 0) {
+            x--;
+            err -= 2 * x + 1;
+        }
+    }
+}
+
+SHIFTOS_CALL void gfx_fill_circle(u64 cx, u64 cy, u64 r, u32 color) {
+    if (r == 0) {
+        gfx_put_pixel(cx, cy, color);
+        return;
+    }
+
+    s64 x = (s64)r;
+    s64 y = 0;
+    s64 err = 0;
+
+    while (x >= y) {
+        if ((s64)cy + y >= 0) gfx_hline(cx - (u64)x, cy + (u64)y, (u64)(x * 2 + 1), color);
+        if ((s64)cy + x >= 0) gfx_hline(cx - (u64)y, cy + (u64)x, (u64)(y * 2 + 1), color);
+        if ((s64)cy - y >= 0) gfx_hline(cx - (u64)x, cy - (u64)y, (u64)(x * 2 + 1), color);
+        if ((s64)cy - x >= 0) gfx_hline(cx - (u64)y, cy - (u64)x, (u64)(y * 2 + 1), color);
+
+        y++;
+        err += 2 * y + 1;
+        if (err > 0) {
+            x--;
+            err -= 2 * x + 1;
+        }
+    }
+}
