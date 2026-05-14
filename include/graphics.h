@@ -26,4 +26,7 @@ SHIFTOS_CALL void gfx_draw_rect(u64 x, u64 y, u64 w, u64 h, u32 color);
 SHIFTOS_CALL void gfx_draw_gradient(u64 x, u64 y, u64 w, u64 h, u32 top, u32 bottom);
 SHIFTOS_CALL void gfx_draw_checker(u64 size, u32 c1, u32 c2);
 
+SHIFTOS_CALL void gfx_draw_circle(u64 cx, u64 cy, u64 r, u32 color);
+SHIFTOS_CALL void gfx_fill_circle(u64 cx, u64 cy, u64 r, u32 color);
+
 #endif
