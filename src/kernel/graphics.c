@@ -1,6 +1,7 @@
 #include "graphics.h"
 #include "bootinfo.h"
 #include "color.h"
+#include "font.h"
 
 static struct gfx_context g_gfx;
 
@@ -264,4 +265,49 @@ SHIFTOS_CALL void gfx_fill_circle(u64 cx, u64 cy, u64 r, u32 color) {
             err -= 2 * x + 1;
         }
     }
+}
+
+static void gfx_draw_char_at(u64 x, u64 y, char c, u32 color, int alpha) {
+    const u8 *glyph = font_get_glyph(c);
+    if (!glyph) {
+        return;
+    }
+
+    for (u64 row = 0; row < 8; ++row) {
+        u8 bits = glyph[row];
+        for (u64 col = 0; col < 8; ++col) {
+            if (bits & (1u << (7 - col))) {
+                if (alpha) {
+                    gfx_put_pixel_alpha(x + col, y + row, color);
+                } else {
+                    gfx_put_pixel(x + col, y + row, color);
+                }
+            }
+        }
+    }
+}
+
+SHIFTOS_CALL void gfx_draw_text(u64 x, u64 y, const char *text, u32 color) {
+    u64 cx = x;
+    for (const char *p = text; *p; ++p) {
+        gfx_draw_char_at(cx, y, *p, color, 0);
+        cx += 9;
+    }
+}
+
+SHIFTOS_CALL void gfx_draw_text_glow(u64 x, u64 y, const char *text, u32 color, u32 glow) {
+    const s64 offsets[8][2] = {
+        {-1, 0}, {1, 0}, {0, -1}, {0, 1},
+        {-1, -1}, {-1, 1}, {1, -1}, {1, 1}
+    };
+
+    for (u64 i = 0; i < 8; ++i) {
+        u64 cx = x;
+        for (const char *p = text; *p; ++p) {
+            gfx_draw_char_at(cx + offsets[i][0], y + offsets[i][1], *p, glow, 1);
+            cx += 9;
+        }
+    }
+
+    gfx_draw_text(x, y, text, color);
 }
