@@ -23,6 +23,14 @@ SHIFTOS_CALL int gfx_init(void) {
     return 1;
 }
 
+SHIFTOS_CALL u64 gfx_width(void) {
+    return g_gfx.width;
+}
+
+SHIFTOS_CALL u64 gfx_height(void) {
+    return g_gfx.height;
+}
+
 SHIFTOS_CALL void gfx_put_pixel(u64 x, u64 y, u32 color) {
     if (x >= g_gfx.width || y >= g_gfx.height) {
         return;
