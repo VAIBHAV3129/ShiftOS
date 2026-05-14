@@ -47,5 +47,10 @@ void kmain(void) {
 
     gfx_fill_rect_alpha(100, h / 2, 360, 120, color_rgba(0, 0, 0, 96));
 
+    gfx_fill_circle(w - 180, 120, 60, color_rgb(50, 220, 160));
+    gfx_draw_circle(w - 180, 120, 60, color_rgb(255, 255, 255));
+    gfx_fill_circle(w - 80, 200, 40, color_rgb(255, 100, 120));
+    gfx_draw_circle(w - 80, 200, 40, color_rgb(255, 255, 255));
+
     kpanic("kmain idle");
 }
