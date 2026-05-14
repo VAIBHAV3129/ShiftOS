@@ -7,6 +7,43 @@
 #include "graphics.h"
 #include "color.h"
 
+static void spin_delay(u64 ticks) {
+    for (u64 i = 0; i < ticks; ++i) {
+        __asm__ volatile("pause");
+    }
+}
+
+static void render_scene(u64 progress, u8 pulse) {
+    u64 w = gfx_width();
+    u64 h = gfx_height();
+
+    gfx_draw_checker(64, color_rgb(10, 16, 26), color_rgb(16, 24, 34));
+    gfx_draw_gradient(0, 0, w, h / 2, color_rgb(10, 50, 90), color_rgb(6, 18, 40));
+
+    const char *title = "ShiftOS";
+    u64 title_w = 7 * 9 - 1;
+    u64 title_x = (w > title_w) ? (w - title_w) / 2 : 0;
+    u64 title_y = h / 3;
+
+    u8 glow_a = 40 + (pulse * 160) / 255;
+    u32 glow = color_rgba(0, 255, 255, glow_a);
+    u32 text = color_rgb(0, 220, 220);
+
+    gfx_draw_text_glow(title_x, title_y, title, text, glow);
+
+    u64 bar_w = (w > 400) ? 400 : (w - 40);
+    u64 bar_h = 16;
+    u64 bar_x = (w - bar_w) / 2;
+    u64 bar_y = title_y + 40;
+
+    gfx_fill_rect(bar_x, bar_y, bar_w, bar_h, color_rgb(18, 28, 40));
+    gfx_draw_rect(bar_x, bar_y, bar_w, bar_h, color_rgb(0, 180, 200));
+
+    u64 fill_w = (bar_w - 4) * progress / 100;
+    gfx_fill_rect(bar_x + 2, bar_y + 2, fill_w, bar_h - 4, color_rgb(0, 220, 220));
+    gfx_fill_rect_alpha(bar_x + 2, bar_y + 2, fill_w, bar_h / 2, color_rgba(255, 255, 255, 40));
+}
+
 SHIFTOS_NORETURN SHIFTOS_CALL
 void kmain(void) {
     (void)&__kernel_start;
@@ -28,29 +65,28 @@ void kmain(void) {
         kpanic("gfx init failed");
     }
 
-    u64 w = gfx_width();
-    u64 h = gfx_height();
+    u8 pulse = 0;
+    int dir = 1;
 
-    gfx_draw_checker(64, color_rgb(14, 20, 30), color_rgb(20, 28, 40));
-    gfx_draw_gradient(0, 0, w, h / 3, color_rgb(24, 90, 180), color_rgb(8, 24, 64));
+    for (;;) {
+        for (u64 progress = 0; progress <= 100; ++progress) {
+            render_scene(progress, pulse);
 
-    gfx_fill_rect(40, 40, 240, 120, color_rgb(255, 122, 24));
-    gfx_fill_rect(320, 80, 200, 160, color_rgb(59, 167, 255));
-    gfx_fill_rect(600, 140, 280, 180, color_rgb(149, 59, 255));
+            if (dir > 0) {
+                if (pulse >= 250) {
+                    dir = -1;
+                } else {
+                    pulse += 5;
+                }
+            } else {
+                if (pulse <= 5) {
+                    dir = 1;
+                } else {
+                    pulse -= 5;
+                }
+            }
 
-    gfx_draw_rect(30, 30, 260, 140, color_rgb(255, 255, 255));
-    gfx_draw_rect(310, 70, 220, 180, color_rgb(255, 255, 255));
-    gfx_draw_rect(590, 130, 300, 200, color_rgb(255, 255, 255));
-
-    gfx_draw_line(0, 0, w / 2, h / 2, color_rgb(255, 215, 0));
-    gfx_draw_line(0, h / 2, w / 2, 0, color_rgb(255, 215, 0));
-
-    gfx_fill_rect_alpha(100, h / 2, 360, 120, color_rgba(0, 0, 0, 96));
-
-    gfx_fill_circle(w - 180, 120, 60, color_rgb(50, 220, 160));
-    gfx_draw_circle(w - 180, 120, 60, color_rgb(255, 255, 255));
-    gfx_fill_circle(w - 80, 200, 40, color_rgb(255, 100, 120));
-    gfx_draw_circle(w - 80, 200, 40, color_rgb(255, 255, 255));
-
-    kpanic("kmain idle");
+            spin_delay(600000);
+        }
+    }
 }
