@@ -6,12 +6,7 @@
 #include "bootinfo.h"
 #include "graphics.h"
 #include "color.h"
-
-static void spin_delay(u64 ticks) {
-    for (u64 i = 0; i < ticks; ++i) {
-        __asm__ volatile("pause");
-    }
-}
+#include "time.h"
 
 static void render_scene(u64 progress, u8 pulse) {
     u64 w = gfx_width();
@@ -21,7 +16,10 @@ static void render_scene(u64 progress, u8 pulse) {
     gfx_draw_gradient(0, 0, w, h / 2, color_rgb(10, 50, 90), color_rgb(6, 18, 40));
 
     const char *title = "ShiftOS";
-    u64 title_w = 7 * 9 - 1;
+    u64 title_w = 0;
+    u64 title_h = 0;
+    gfx_measure_text(title, &title_w, &title_h);
+
     u64 title_x = (w > title_w) ? (w - title_w) / 2 : 0;
     u64 title_y = h / 3;
 
@@ -34,7 +32,7 @@ static void render_scene(u64 progress, u8 pulse) {
     u64 bar_w = (w > 400) ? 400 : (w - 40);
     u64 bar_h = 16;
     u64 bar_x = (w - bar_w) / 2;
-    u64 bar_y = title_y + 40;
+    u64 bar_y = title_y + title_h + 24;
 
     gfx_fill_rect(bar_x, bar_y, bar_w, bar_h, color_rgb(18, 28, 40));
     gfx_draw_rect(bar_x, bar_y, bar_w, bar_h, color_rgb(0, 180, 200));
@@ -65,6 +63,8 @@ void kmain(void) {
         kpanic("gfx init failed");
     }
 
+    time_init();
+
     u8 pulse = 0;
     int dir = 1;
 
@@ -86,7 +86,7 @@ void kmain(void) {
                 }
             }
 
-            spin_delay(600000);
+            time_wait(1);
         }
     }
 }
