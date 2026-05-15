@@ -31,5 +31,6 @@ SHIFTOS_CALL void gfx_fill_circle(u64 cx, u64 cy, u64 r, u32 color);
 
 SHIFTOS_CALL void gfx_draw_text(u64 x, u64 y, const char *text, u32 color);
 SHIFTOS_CALL void gfx_draw_text_glow(u64 x, u64 y, const char *text, u32 color, u32 glow);
+SHIFTOS_CALL void gfx_measure_text(const char *text, u64 *out_w, u64 *out_h);
 
 #endif
