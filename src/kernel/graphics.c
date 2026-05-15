@@ -311,3 +311,25 @@ SHIFTOS_CALL void gfx_draw_text_glow(u64 x, u64 y, const char *text, u32 color, 
 
     gfx_draw_text(x, y, text, color);
 }
+
+SHIFTOS_CALL void gfx_measure_text(const char *text, u64 *out_w, u64 *out_h) {
+    if (out_w) {
+        *out_w = 0;
+    }
+    if (out_h) {
+        *out_h = 8;
+    }
+
+    if (!text) {
+        return;
+    }
+
+    u64 len = 0;
+    for (const char *p = text; *p; ++p) {
+        len++;
+    }
+
+    if (out_w) {
+        *out_w = len ? (len * 9 - 1) : 0;
+    }
+}
