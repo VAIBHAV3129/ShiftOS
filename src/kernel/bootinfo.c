@@ -7,20 +7,20 @@ SHIFTOS_CALL int bootinfo_init(void) {
     g_boot_info.has_framebuffer = 0;
 
     if (!limine_framebuffer_request.response) {
-        return 1;
+        return 0;
     }
 
     if (limine_framebuffer_request.response->framebuffer_count == 0) {
-        return 1;
+        return 0;
     }
 
     if (!limine_framebuffer_request.response->framebuffers) {
-        return 1;
+        return 0;
     }
 
     struct limine_framebuffer *fb = limine_framebuffer_request.response->framebuffers[0];
     if (!fb) {
-        return 1;
+        return 0;
     }
 
     g_boot_info.has_framebuffer = 1;
