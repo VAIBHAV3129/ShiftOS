@@ -16,7 +16,7 @@ static inline u8 inb(u16 port) {
 }
 
 static inline void io_wait(void) {
-    __asm__ volatile("outb %0, $0x80" : : "a"(0));
+    __asm__ volatile("outb %b0, $0x80" : : "a"(0));
 }
 
 SHIFTOS_CALL void cpu_pic_remap(void) {
