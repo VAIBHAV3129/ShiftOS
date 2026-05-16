@@ -333,3 +333,24 @@ SHIFTOS_CALL void gfx_measure_text(const char *text, u64 *out_w, u64 *out_h) {
         *out_w = len ? (len * 9 - 1) : 0;
     }
 }
+
+SHIFTOS_CALL void gfx_draw_window(u64 x, u64 y, u64 w, u64 h, const char *title, u32 accent, u32 body) {
+    if (w < 32 || h < 32) {
+        return;
+    }
+
+    u64 title_h = 20;
+
+    gfx_fill_rect(x, y, w, h, body);
+    gfx_fill_rect(x, y, w, title_h, accent);
+    gfx_draw_rect(x, y, w, h, color_rgb(0, 180, 200));
+
+    if (title) {
+        u64 text_w = 0;
+        u64 text_h = 0;
+        gfx_measure_text(title, &text_w, &text_h);
+        u64 tx = x + 8;
+        u64 ty = y + (title_h - text_h) / 2;
+        gfx_draw_text(tx, ty, title, color_rgb(230, 255, 255));
+    }
+}
