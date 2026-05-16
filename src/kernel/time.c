@@ -24,6 +24,8 @@ SHIFTOS_CALL void pit_handler_callback(void) {
 
 SHIFTOS_CALL void time_init(void) {
     g_ticks = 0;
+    cpu_cli();
+    cpu_pic_remap();
     idt_init();
     pit_init(100);
     cpu_sti();
