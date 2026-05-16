@@ -10,6 +10,7 @@
 #define SHIFTOS_CALL      __attribute__((sysv_abi))
 #define SHIFTOS_UNUSED    __attribute__((unused))
 
+
 #define SHIFTOS_INLINE static inline __attribute__((always_inline))
 
 #endif
