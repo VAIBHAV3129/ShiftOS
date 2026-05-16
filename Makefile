@@ -3,9 +3,6 @@ CC := x86_64-elf-gcc
 LD := x86_64-elf-ld
 NASM := nasm
 
-# -ffreestanding: prevent hosted assumptions and libc-driven startup/runtime expectations.
-# -fno-pic: avoid position-independent code sequences that depend on a loader/relocator.
-# -mno-red-zone: keep interrupt/trap handlers safe from ABI red-zone stack clobbering.
 CFLAGS := -ffreestanding -fno-builtin -fno-stack-protector -fno-pic -mno-red-zone -m64 -nostdlib -Wall -Wextra -O0 -g
 LDFLAGS := -nostdlib -T linker.ld -z max-page-size=0x1000
 
@@ -17,6 +14,10 @@ LIMINE_DIR := limine
 KERNEL_ELF := $(BUILD_DIR)/shiftos.elf
 KERNEL_MAP := $(BUILD_DIR)/shiftos.map
 LIMINE_CFG := $(BOOT_DIR)/limine.cfg
+
+ISO_DIR := $(BUILD_DIR)/iso
+ISO_BOOT_DIR := $(ISO_DIR)/boot
+ISO_IMAGE := $(BUILD_DIR)/shiftos.iso
 
 C_SOURCES := src/kernel/main.c \
              src/kernel/panic.c \
@@ -49,12 +50,19 @@ $(OBJ_DIR)/%.o: src/%.asm
 	$(NASM) -f elf64 $< -o $@
 
 iso: $(KERNEL_ELF)
-	@mkdir -p $(BUILD_DIR)/iso/boot
-	cp $(KERNEL_ELF) $(BUILD_DIR)/iso/boot/shiftos.elf
-	cp $(LIMINE_CFG) $(BUILD_DIR)/iso/limine.cfg
-	@echo "ISO staging complete. Add Limine binaries in ./limine before making a bootable ISO."
+	@mkdir -p $(ISO_BOOT_DIR)
+	cp $(KERNEL_ELF) $(ISO_BOOT_DIR)/shiftos.elf
+	cp $(LIMINE_CFG) $(ISO_DIR)/limine.cfg
+
+iso-image: iso
+	xorriso -as mkisofs -b $(LIMINE_DIR)/limine-bios-cd.bin \
+		-no-emul-boot -boot-load-size 4 -boot-info-table \
+		--efi-boot $(LIMINE_DIR)/limine-uefi-cd.bin -efi-boot-part \
+		--efi-boot-image --protective-msdos-label \
+		$(ISO_DIR) -o $(ISO_IMAGE)
+	$(LIMINE_DIR)/limine-deploy $(ISO_IMAGE)
 
 clean:
 	rm -rf $(BUILD_DIR)
 
-.PHONY: all clean iso
+.PHONY: all clean iso iso-image
