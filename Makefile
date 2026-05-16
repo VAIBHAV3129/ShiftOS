@@ -3,7 +3,10 @@ CC := x86_64-elf-gcc
 LD := x86_64-elf-ld
 NASM := nasm
 
-CFLAGS := -ffreestanding -fno-builtin -fno-stack-protector -fno-pic -mno-red-zone -m64 -nostdlib -Wall -Wextra -O2 -g
+# -ffreestanding: prevent hosted assumptions and libc-driven startup/runtime expectations.
+# -fno-pic: avoid position-independent code sequences that depend on a loader/relocator.
+# -mno-red-zone: keep interrupt/trap handlers safe from ABI red-zone stack clobbering.
+CFLAGS := -ffreestanding -fno-builtin -fno-stack-protector -fno-pic -mno-red-zone -m64 -nostdlib -Wall -Wextra -O0 -g
 LDFLAGS := -nostdlib -T linker.ld -z max-page-size=0x1000
 
 BUILD_DIR := build
@@ -22,9 +25,11 @@ C_SOURCES := src/kernel/main.c \
              src/kernel/graphics.c \
              src/kernel/color.c \
              src/kernel/font.c \
-             src/kernel/time.c
+             src/kernel/time.c \
+             src/kernel/cpu.c
 
-ASM_SOURCES := src/arch/x86_64/boot.asm
+ASM_SOURCES := src/arch/x86_64/boot.asm \
+               src/arch/x86_64/interrupt.asm
 
 C_OBJS := $(patsubst src/%.c,$(OBJ_DIR)/%.o,$(C_SOURCES))
 ASM_OBJS := $(patsubst src/%.asm,$(OBJ_DIR)/%.o,$(ASM_SOURCES))
