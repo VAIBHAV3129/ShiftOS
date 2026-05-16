@@ -33,5 +33,6 @@ struct idt_ptr {
 
 SHIFTOS_CALL void idt_set_gate(u8 vector, u64 handler_address, u16 selector, u8 attributes);
 SHIFTOS_CALL void idt_init(void);
+SHIFTOS_CALL void cpu_pic_remap(void);
 
 #endif
