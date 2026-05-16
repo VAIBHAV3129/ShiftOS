@@ -21,7 +21,7 @@ static void render_scene(u64 progress, u8 pulse) {
     gfx_measure_text(title, &title_w, &title_h);
 
     u64 title_x = (w > title_w) ? (w - title_w) / 2 : 0;
-    u64 title_y = h / 3;
+    u64 title_y = h / 5;
 
     u8 glow_a = 40 + (pulse * 160) / 255;
     u32 glow = color_rgba(0, 255, 255, glow_a);
@@ -32,7 +32,7 @@ static void render_scene(u64 progress, u8 pulse) {
     u64 bar_w = (w > 400) ? 400 : (w - 40);
     u64 bar_h = 16;
     u64 bar_x = (w - bar_w) / 2;
-    u64 bar_y = title_y + title_h + 24;
+    u64 bar_y = title_y + title_h + 20;
 
     gfx_fill_rect(bar_x, bar_y, bar_w, bar_h, color_rgb(18, 28, 40));
     gfx_draw_rect(bar_x, bar_y, bar_w, bar_h, color_rgb(0, 180, 200));
@@ -40,6 +40,10 @@ static void render_scene(u64 progress, u8 pulse) {
     u64 fill_w = (bar_w - 4) * progress / 100;
     gfx_fill_rect(bar_x + 2, bar_y + 2, fill_w, bar_h - 4, color_rgb(0, 220, 220));
     gfx_fill_rect_alpha(bar_x + 2, bar_y + 2, fill_w, bar_h / 2, color_rgba(255, 255, 255, 40));
+
+    u64 win_y = bar_y + 40;
+    gfx_draw_window(80, win_y, 360, 200, "Welcome", color_rgb(0, 110, 140), color_rgb(20, 32, 48));
+    gfx_draw_window(500, win_y + 40, 320, 180, "System", color_rgb(0, 140, 160), color_rgb(18, 26, 40));
 }
 
 SHIFTOS_NORETURN SHIFTOS_CALL
