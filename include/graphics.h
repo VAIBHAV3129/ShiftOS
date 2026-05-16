@@ -33,4 +33,6 @@ SHIFTOS_CALL void gfx_draw_text(u64 x, u64 y, const char *text, u32 color);
 SHIFTOS_CALL void gfx_draw_text_glow(u64 x, u64 y, const char *text, u32 color, u32 glow);
 SHIFTOS_CALL void gfx_measure_text(const char *text, u64 *out_w, u64 *out_h);
 
+SHIFTOS_CALL void gfx_draw_window(u64 x, u64 y, u64 w, u64 h, const char *title, u32 accent, u32 body);
+
 #endif
