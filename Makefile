@@ -2,6 +2,7 @@ ARCH := x86_64
 CC := x86_64-elf-gcc
 LD := x86_64-elf-ld
 NASM := nasm
+QEMU := qemu-system-x86_64
 
 CFLAGS := -ffreestanding -fno-builtin -fno-stack-protector -fno-pic -mno-red-zone -m64 -nostdlib -Wall -Wextra -O0 -g
 LDFLAGS := -nostdlib -T linker.ld -z max-page-size=0x1000
@@ -49,7 +50,7 @@ $(OBJ_DIR)/%.o: src/%.asm
 	@mkdir -p $(dir $@)
 	$(NASM) -f elf64 $< -o $@
 
-iso: $(KERNEL_ELF)
+iso: $(KERNEL_ELF) $(LIMINE_CFG)
 	@mkdir -p $(ISO_BOOT_DIR)
 	cp $(KERNEL_ELF) $(ISO_BOOT_DIR)/shiftos.elf
 	cp $(LIMINE_CFG) $(ISO_DIR)/limine.cfg
@@ -62,7 +63,10 @@ iso-image: iso
 		$(ISO_DIR) -o $(ISO_IMAGE)
 	$(LIMINE_DIR)/limine-deploy $(ISO_IMAGE)
 
+run: iso-image
+	$(QEMU) -cdrom $(ISO_IMAGE) -m 512M -serial stdio
+
 clean:
 	rm -rf $(BUILD_DIR)
 
-.PHONY: all clean iso iso-image
+.PHONY: all clean iso iso-image run
