@@ -16,8 +16,22 @@ SHIFTOS_CALL int gfx_init(void) {
     g_gfx.height = boot->fb.height;
     g_gfx.pitch = boot->fb.pitch;
     g_gfx.bpp = boot->fb.bpp;
+    g_gfx.stride = 0;
 
     if (!g_gfx.buffer || g_gfx.width == 0 || g_gfx.height == 0) {
+        return 0;
+    }
+
+    if (g_gfx.pitch == 0 || g_gfx.bpp != 32) {
+        return 0;
+    }
+
+    if (g_gfx.pitch < g_gfx.width * 4) {
+        return 0;
+    }
+
+    g_gfx.stride = g_gfx.pitch / 4;
+    if (g_gfx.stride == 0) {
         return 0;
     }
 
@@ -37,8 +51,7 @@ SHIFTOS_CALL void gfx_put_pixel(u64 x, u64 y, u32 color) {
         return;
     }
 
-    u64 pixels_per_row = g_gfx.pitch / 4;
-    g_gfx.buffer[y * pixels_per_row + x] = color;
+    g_gfx.buffer[y * g_gfx.stride + x] = color;
 }
 
 SHIFTOS_CALL void gfx_put_pixel_alpha(u64 x, u64 y, u32 color) {
@@ -46,16 +59,14 @@ SHIFTOS_CALL void gfx_put_pixel_alpha(u64 x, u64 y, u32 color) {
         return;
     }
 
-    u64 pixels_per_row = g_gfx.pitch / 4;
-    u64 idx = y * pixels_per_row + x;
+    u64 idx = y * g_gfx.stride + x;
     u32 dst = g_gfx.buffer[idx];
     g_gfx.buffer[idx] = color_blend(color, dst);
 }
 
 SHIFTOS_CALL void gfx_clear(u32 color) {
-    u64 pixels_per_row = g_gfx.pitch / 4;
     for (u64 y = 0; y < g_gfx.height; ++y) {
-        u64 row = y * pixels_per_row;
+        u64 row = y * g_gfx.stride;
         for (u64 x = 0; x < g_gfx.width; ++x) {
             g_gfx.buffer[row + x] = color;
         }
@@ -77,9 +88,8 @@ SHIFTOS_CALL void gfx_fill_rect(u64 x, u64 y, u64 w, u64 h, u32 color) {
         max_y = g_gfx.height;
     }
 
-    u64 pixels_per_row = g_gfx.pitch / 4;
     for (u64 yy = y; yy < max_y; ++yy) {
-        u64 row = yy * pixels_per_row;
+        u64 row = yy * g_gfx.stride;
         for (u64 xx = x; xx < max_x; ++xx) {
             g_gfx.buffer[row + xx] = color;
         }
@@ -101,9 +111,8 @@ SHIFTOS_CALL void gfx_fill_rect_alpha(u64 x, u64 y, u64 w, u64 h, u32 color) {
         max_y = g_gfx.height;
     }
 
-    u64 pixels_per_row = g_gfx.pitch / 4;
     for (u64 yy = y; yy < max_y; ++yy) {
-        u64 row = yy * pixels_per_row;
+        u64 row = yy * g_gfx.stride;
         for (u64 xx = x; xx < max_x; ++xx) {
             u64 idx = row + xx;
             u32 dst = g_gfx.buffer[idx];
