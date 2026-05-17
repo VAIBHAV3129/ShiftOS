@@ -13,6 +13,12 @@ SHIFTOS_CALL void pit_init(u32 frequency) {
     }
 
     u32 divisor = 1193182u / frequency;
+    if (divisor == 0) {
+        divisor = 1;
+    } else if (divisor > 0xFFFFu) {
+        divisor = 0xFFFFu;
+    }
+
     outb(0x43, 0x36);
     outb(0x40, (u8)(divisor & 0xFF));
     outb(0x40, (u8)((divisor >> 8) & 0xFF));
