@@ -31,11 +31,8 @@ SECTIONS
     .data : {
         __data_start = .;
         *(.data*)
+        *(.limine_reqs)
         __data_end = .;
-    } :data
-
-    .limine_reqs : {
-        KEEP(*(.limine_reqs))
     } :data
 
     .bss : {
