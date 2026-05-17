@@ -56,6 +56,7 @@ iso: $(KERNEL_ELF) $(LIMINE_CFG)
 	@mkdir -p $(ISO_LIMINE_DIR)
 	cp $(KERNEL_ELF) $(ISO_BOOT_DIR)/shiftos.elf
 	cp $(LIMINE_CFG) $(ISO_DIR)/limine.cfg
+	cp $(LIMINE_CFG) $(ISO_BOOT_DIR)/limine.cfg
 	cp $(LIMINE_DIR)/limine-bios-cd.bin $(ISO_LIMINE_DIR)/
 	cp $(LIMINE_DIR)/limine-bios.sys $(ISO_LIMINE_DIR)/
 	cp $(LIMINE_DIR)/limine-uefi-cd.bin $(ISO_LIMINE_DIR)/
