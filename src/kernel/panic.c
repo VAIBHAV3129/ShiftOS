@@ -8,6 +8,13 @@ void kpanic(const char *msg) {
     u64 w = gfx_width();
     u64 h = gfx_height();
 
+    if (w == 0 || h == 0) {
+        cpu_cli();
+        for (;;) {
+            cpu_hlt();
+        }
+    }
+
     gfx_clear(color_rgb(180, 0, 0));
 
     const char *title = "CRITICAL KERNEL PANIC";
