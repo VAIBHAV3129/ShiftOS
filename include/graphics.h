@@ -9,6 +9,7 @@ struct gfx_context {
     u64 width;
     u64 height;
     u64 pitch;
+    u64 stride;
     u16 bpp;
 };
 
