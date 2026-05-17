@@ -47,7 +47,20 @@ struct limine_framebuffer_request {
     struct limine_framebuffer_response *response;
 };
 
+// HHDM structures
+struct limine_hhdm_response {
+    u64 revision;
+    u64 offset;
+};
+
+struct limine_hhdm_request {
+    struct limine_uuid id;
+    u64 revision;
+    struct limine_hhdm_response *response;
+};
+
 extern volatile struct limine_base_revision_request limine_base_revision_request;
 extern volatile struct limine_framebuffer_request limine_framebuffer_request;
+extern volatile struct limine_hhdm_request limine_hhdm_request;
 
 #endif
