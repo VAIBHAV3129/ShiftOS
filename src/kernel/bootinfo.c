@@ -1,6 +1,8 @@
 #include "bootinfo.h"
 #include "limine.h"
 
+extern volatile struct limine_framebuffer_request limine_framebuffer_request;
+
 static struct boot_info g_boot_info;
 
 SHIFTOS_CALL int bootinfo_init(void) {
