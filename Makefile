@@ -14,7 +14,7 @@ LIMINE_DIR := limine
 
 KERNEL_ELF := $(BUILD_DIR)/shiftos.elf
 KERNEL_MAP := $(BUILD_DIR)/shiftos.map
-LIMINE_CFG := $(BOOT_DIR)/limine.cfg
+LIMINE_CFG := $(BOOT_DIR)/limine.conf
 
 ISO_DIR := $(BUILD_DIR)/iso
 ISO_BOOT_DIR := $(ISO_DIR)/boot
@@ -54,28 +54,30 @@ $(OBJ_DIR)/%.o: src/%.asm
 iso: $(KERNEL_ELF) $(LIMINE_CFG)
 	@mkdir -p $(ISO_BOOT_DIR)
 	@mkdir -p $(ISO_LIMINE_DIR)
+
 	cp $(KERNEL_ELF) $(ISO_BOOT_DIR)/shiftos.elf
-	cp $(LIMINE_CFG) $(ISO_DIR)/limine.cfg
-	cp $(LIMINE_CFG) $(ISO_DIR)/LIMINE.CFG
-	cp $(LIMINE_CFG) $(ISO_BOOT_DIR)/limine.cfg
-	cp $(LIMINE_CFG) $(ISO_BOOT_DIR)/LIMINE.CFG
-	cp $(LIMINE_CFG) $(ISO_LIMINE_DIR)/limine.cfg
-	cp $(LIMINE_CFG) $(ISO_LIMINE_DIR)/LIMINE.CFG
+
+	# copy config to all valid locations
+	cp $(LIMINE_CFG) $(ISO_DIR)/limine.conf
+	cp $(LIMINE_CFG) $(ISO_BOOT_DIR)/limine.conf
+	cp $(LIMINE_CFG) $(ISO_LIMINE_DIR)/limine.conf
+
 	cp $(LIMINE_DIR)/limine-bios-cd.bin $(ISO_LIMINE_DIR)/
 	cp $(LIMINE_DIR)/limine-bios.sys $(ISO_LIMINE_DIR)/
 	cp $(LIMINE_DIR)/limine-uefi-cd.bin $(ISO_LIMINE_DIR)/
 
 iso-image: iso
+	$(MAKE) -C $(LIMINE_DIR) limine-deploy
 	xorriso -as mkisofs -R -J \
 		-b limine/limine-bios-cd.bin \
 		-no-emul-boot -boot-load-size 4 -boot-info-table \
 		--efi-boot limine/limine-uefi-cd.bin -efi-boot-part \
 		--efi-boot-image --protective-msdos-label \
 		$(ISO_DIR) -o $(ISO_IMAGE)
-	# $(LIMINE_DIR)/limine-deploy $(ISO_IMAGE)
+	$(LIMINE_DIR)/limine-deploy $(ISO_IMAGE)
 
 run: iso-image
-	$(QEMU) -cdrom $(ISO_IMAGE) -m 512M -serial stdio
+	$(QEMU) -cdrom $(ISO_IMAGE) -m 512M -serial stdio -no-reboot -d cpu_reset,guest_errors
 
 clean:
 	rm -rf $(BUILD_DIR)
