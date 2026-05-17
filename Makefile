@@ -66,7 +66,7 @@ iso-image: iso
 		--efi-boot limine/limine-uefi-cd.bin -efi-boot-part \
 		--efi-boot-image --protective-msdos-label \
 		$(ISO_DIR) -o $(ISO_IMAGE)
-	$(LIMINE_DIR)/limine-deploy $(ISO_IMAGE)
+	# $(LIMINE_DIR)/limine-deploy $(ISO_IMAGE)
 
 run: iso-image
 	$(QEMU) -cdrom $(ISO_IMAGE) -m 512M -serial stdio
