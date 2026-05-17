@@ -71,14 +71,13 @@ void kmain(void) {
         kpanic("gfx init failed");
     }
 
-    time_init();
-
     u8 pulse = 0;
     int dir = 1;
+    u64 fake_ticks = 0;
 
     for (;;) {
         for (u64 progress = 0; progress <= 100; ++progress) {
-            render_scene(progress, pulse, time_ticks());
+            render_scene(progress, pulse, fake_ticks++);
 
             if (dir > 0) {
                 if (pulse >= 250) {
@@ -94,7 +93,7 @@ void kmain(void) {
                 }
             }
 
-            time_wait(1);
+            for (volatile int delay = 0; delay < 5000000; delay++);
         }
     }
 }
