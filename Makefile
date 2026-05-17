@@ -4,7 +4,7 @@ LD := x86_64-elf-ld
 NASM := nasm
 QEMU := qemu-system-x86_64
 
-CFLAGS := -ffreestanding -fno-builtin -fno-stack-protector -fno-pic -mno-red-zone -m64 -nostdlib -Wall -Wextra -O0 -g
+CFLAGS := -ffreestanding -fno-builtin -fno-stack-protector -fno-pic -mno-red-zone -m64 -nostdlib -Wall -Wextra -O0 -g -mcmodel=kernel
 LDFLAGS := -nostdlib -T linker.ld -z max-page-size=0x1000 -z noexecstack --no-warn-rwx-segments
 
 BUILD_DIR := build
@@ -73,7 +73,6 @@ iso-image: iso
 		--efi-boot limine/limine-uefi-cd.bin -efi-boot-part \
 		--efi-boot-image --protective-msdos-label \
 		$(ISO_DIR) -o $(ISO_IMAGE)
-	# $(LIMINE_DIR)/limine-deploy $(ISO_IMAGE)
 
 run: iso-image
 	$(QEMU) -cdrom $(ISO_IMAGE) -m 512M -serial stdio
