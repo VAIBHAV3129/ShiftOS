@@ -45,7 +45,9 @@ static void render_scene(u64 progress, u8 pulse, u64 ticks) {
     gfx_draw_window(80, win_y, 360, 200, "Welcome", color_rgb(0, 110, 140), color_rgb(20, 32, 48));
     gfx_draw_window(500, win_y + 40, 320, 180, "System", color_rgb(0, 140, 160), color_rgb(18, 26, 40));
 
-    gfx_draw_textf(24, h - 20, color_rgb(200, 230, 255), "ticks: ", ticks);
+    if (h > 20) {
+        gfx_draw_textf(24, h - 20, color_rgb(200, 230, 255), "ticks: ", ticks);
+    }
 }
 
 SHIFTOS_NORETURN SHIFTOS_CALL
