@@ -5,7 +5,7 @@ NASM := nasm
 QEMU := qemu-system-x86_64
 
 CFLAGS := -ffreestanding -fno-builtin -fno-stack-protector -fno-pic -mno-red-zone -m64 -nostdlib -Wall -Wextra -O0 -g
-LDFLAGS := -nostdlib -T linker.ld -z max-page-size=0x1000
+LDFLAGS := -nostdlib -T linker.ld -z max-page-size=0x1000 -z noexecstack --no-warn-rwx-segments
 
 BUILD_DIR := build
 OBJ_DIR := $(BUILD_DIR)/obj
@@ -18,6 +18,7 @@ LIMINE_CFG := $(BOOT_DIR)/limine.cfg
 
 ISO_DIR := $(BUILD_DIR)/iso
 ISO_BOOT_DIR := $(ISO_DIR)/boot
+ISO_LIMINE_DIR := $(ISO_DIR)/limine
 ISO_IMAGE := $(BUILD_DIR)/shiftos.iso
 
 C_SOURCES := src/kernel/main.c \
@@ -52,13 +53,17 @@ $(OBJ_DIR)/%.o: src/%.asm
 
 iso: $(KERNEL_ELF) $(LIMINE_CFG)
 	@mkdir -p $(ISO_BOOT_DIR)
+	@mkdir -p $(ISO_LIMINE_DIR)
 	cp $(KERNEL_ELF) $(ISO_BOOT_DIR)/shiftos.elf
 	cp $(LIMINE_CFG) $(ISO_DIR)/limine.cfg
+	cp $(LIMINE_DIR)/limine-bios-cd.bin $(ISO_LIMINE_DIR)/
+	cp $(LIMINE_DIR)/limine-bios.sys $(ISO_LIMINE_DIR)/
+	cp $(LIMINE_DIR)/limine-uefi-cd.bin $(ISO_LIMINE_DIR)/
 
 iso-image: iso
-	xorriso -as mkisofs -b $(LIMINE_DIR)/limine-bios-cd.bin \
+	xorriso -as mkisofs -b limine/limine-bios-cd.bin \
 		-no-emul-boot -boot-load-size 4 -boot-info-table \
-		--efi-boot $(LIMINE_DIR)/limine-uefi-cd.bin -efi-boot-part \
+		--efi-boot limine/limine-uefi-cd.bin -efi-boot-part \
 		--efi-boot-image --protective-msdos-label \
 		$(ISO_DIR) -o $(ISO_IMAGE)
 	$(LIMINE_DIR)/limine-deploy $(ISO_IMAGE)
