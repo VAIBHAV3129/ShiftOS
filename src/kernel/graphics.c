@@ -175,6 +175,11 @@ SHIFTOS_CALL void gfx_draw_gradient(u64 x, u64 y, u64 w, u64 h, u32 top, u32 bot
         return;
     }
 
+    if (h == 1) {
+        gfx_fill_rect(x, y, w, 1, top);
+        return;
+    }
+
     u32 tr = (top >> 16) & 0xFFu;
     u32 tg = (top >> 8) & 0xFFu;
     u32 tb = top & 0xFFu;
