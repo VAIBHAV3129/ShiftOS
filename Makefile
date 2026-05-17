@@ -19,6 +19,7 @@ LIMINE_CFG := $(BOOT_DIR)/limine.conf
 ISO_DIR := $(BUILD_DIR)/iso
 ISO_BOOT_DIR := $(ISO_DIR)/boot
 ISO_LIMINE_DIR := $(ISO_DIR)/limine
+ISO_EFI_BOOT_DIR := $(ISO_DIR)/EFI/BOOT
 ISO_IMAGE := $(BUILD_DIR)/shiftos.iso
 
 C_SOURCES := src/kernel/main.c \
@@ -54,6 +55,7 @@ $(OBJ_DIR)/%.o: src/%.asm
 iso: $(KERNEL_ELF) $(LIMINE_CFG)
 	@mkdir -p $(ISO_BOOT_DIR)
 	@mkdir -p $(ISO_LIMINE_DIR)
+	@mkdir -p $(ISO_EFI_BOOT_DIR)
 
 	cp $(KERNEL_ELF) $(ISO_BOOT_DIR)/shiftos.elf
 
@@ -65,6 +67,8 @@ iso: $(KERNEL_ELF) $(LIMINE_CFG)
 	cp $(LIMINE_DIR)/limine-bios-cd.bin $(ISO_LIMINE_DIR)/
 	cp $(LIMINE_DIR)/limine-bios.sys $(ISO_LIMINE_DIR)/
 	cp $(LIMINE_DIR)/limine-uefi-cd.bin $(ISO_LIMINE_DIR)/
+	cp $(LIMINE_DIR)/BOOTX64.EFI $(ISO_EFI_BOOT_DIR)/
+	cp $(LIMINE_DIR)/BOOTIA32.EFI $(ISO_EFI_BOOT_DIR)/
 
 iso-image: iso
 	xorriso -as mkisofs -R -J \
