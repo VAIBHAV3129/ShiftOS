@@ -1,7 +1,7 @@
 ARCH := x86_64
-CC := x86_64-elf-gcc
-LD := x86_64-elf-ld
-NASM := nasm
+CC ?= $(shell if command -v x86_64-elf-gcc >/dev/null 2>&1; then echo x86_64-elf-gcc; else echo gcc; fi)
+LD ?= $(shell if command -v x86_64-elf-ld >/dev/null 2>&1; then echo x86_64-elf-ld; else echo ld; fi)
+NASM ?= $(shell command -v nasm)
 QEMU := qemu-system-x86_64
 
 CFLAGS := -ffreestanding -fno-builtin -fno-stack-protector -fno-pic -mno-red-zone -m64 -nostdlib -Wall -Wextra -O0 -g -mcmodel=kernel
