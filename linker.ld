@@ -24,15 +24,15 @@ SECTIONS
         __data_end = .;
     }
 
+    .limine_reqs : {
+        KEEP(*(.limine_reqs))
+    }
+
     .bss : {
         __bss_start = .;
         *(COMMON)
         *(.bss*)
         __bss_end = .;
-    }
-
-    .limine_reqs : {
-        KEEP(*(.limine_reqs))
     }
 
     __kernel_end = .;
