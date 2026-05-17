@@ -24,6 +24,7 @@ SECTIONS
         __data_end = .;
     }
 
+    . = ALIGN(64);
     .limine_reqs : {
         KEEP(*(.limine_reqs))
     }
@@ -35,6 +36,7 @@ SECTIONS
         __bss_end = .;
     }
 
+    . = ALIGN(4096);
     __kernel_end = .;
 
     /DISCARD/ : {
