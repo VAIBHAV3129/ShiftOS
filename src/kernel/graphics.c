@@ -277,6 +277,13 @@ SHIFTOS_CALL void gfx_fill_circle(u64 cx, u64 cy, u64 r, u32 color) {
 }
 
 static void gfx_draw_char_at(u64 x, u64 y, char c, u32 color, int alpha) {
+    if (x >= g_gfx.width || y >= g_gfx.height) {
+        return;
+    }
+    if (x + 7 >= g_gfx.width || y + 7 >= g_gfx.height) {
+        return;
+    }
+
     const u8 *glyph = font_get_glyph(c);
     if (!glyph) {
         return;
@@ -297,23 +304,45 @@ static void gfx_draw_char_at(u64 x, u64 y, char c, u32 color, int alpha) {
 }
 
 SHIFTOS_CALL void gfx_draw_text(u64 x, u64 y, const char *text, u32 color) {
+    if (!text || x >= g_gfx.width || y >= g_gfx.height) {
+        return;
+    }
+
     u64 cx = x;
     for (const char *p = text; *p; ++p) {
+        if (cx + 7 >= g_gfx.width || y + 7 >= g_gfx.height) {
+            break;
+        }
         gfx_draw_char_at(cx, y, *p, color, 0);
         cx += 9;
     }
 }
 
 SHIFTOS_CALL void gfx_draw_text_glow(u64 x, u64 y, const char *text, u32 color, u32 glow) {
+    if (!text || x >= g_gfx.width || y >= g_gfx.height) {
+        return;
+    }
+
     const s64 offsets[8][2] = {
         {-1, 0}, {1, 0}, {0, -1}, {0, 1},
         {-1, -1}, {-1, 1}, {1, -1}, {1, 1}
     };
 
     for (u64 i = 0; i < 8; ++i) {
+        s64 ox = offsets[i][0];
+        s64 oy = offsets[i][1];
+        if ((s64)x + ox < 0 || (s64)y + oy < 0) {
+            continue;
+        }
+
         u64 cx = x;
         for (const char *p = text; *p; ++p) {
-            gfx_draw_char_at(cx + offsets[i][0], y + offsets[i][1], *p, glow, 1);
+            u64 px = cx + (u64)ox;
+            u64 py = y + (u64)oy;
+            if (px + 7 >= g_gfx.width || py + 7 >= g_gfx.height) {
+                break;
+            }
+            gfx_draw_char_at(px, py, *p, glow, 1);
             cx += 9;
         }
     }
@@ -348,6 +377,10 @@ SHIFTOS_CALL void gfx_draw_window(u64 x, u64 y, u64 w, u64 h, const char *title,
         return;
     }
 
+    if (x >= g_gfx.width || y >= g_gfx.height) {
+        return;
+    }
+
     u64 title_h = 20;
 
     gfx_fill_rect(x, y, w, h, body);
@@ -358,13 +391,26 @@ SHIFTOS_CALL void gfx_draw_window(u64 x, u64 y, u64 w, u64 h, const char *title,
         u64 text_w = 0;
         u64 text_h = 0;
         gfx_measure_text(title, &text_w, &text_h);
+
         u64 tx = x + 8;
+        if (tx + text_w >= g_gfx.width && text_w < g_gfx.width) {
+            tx = g_gfx.width - text_w - 1;
+        }
+
         u64 ty = y + (title_h - text_h) / 2;
+        if (ty + 7 >= g_gfx.height) {
+            return;
+        }
+
         gfx_draw_text(tx, ty, title, color_rgb(230, 255, 255));
     }
 }
 
 SHIFTOS_CALL void gfx_draw_textf(u64 x, u64 y, u32 color, const char *label, u64 value) {
+    if (x >= g_gfx.width || y >= g_gfx.height) {
+        return;
+    }
+
     char buf[32];
     u64 idx = 0;
 
