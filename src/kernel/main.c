@@ -8,7 +8,7 @@
 #include "color.h"
 #include "time.h"
 
-static void render_scene(u64 progress, u8 pulse) {
+static void render_scene(u64 progress, u8 pulse, u64 ticks) {
     u64 w = gfx_width();
     u64 h = gfx_height();
 
@@ -44,6 +44,8 @@ static void render_scene(u64 progress, u8 pulse) {
     u64 win_y = bar_y + 40;
     gfx_draw_window(80, win_y, 360, 200, "Welcome", color_rgb(0, 110, 140), color_rgb(20, 32, 48));
     gfx_draw_window(500, win_y + 40, 320, 180, "System", color_rgb(0, 140, 160), color_rgb(18, 26, 40));
+
+    gfx_draw_textf(24, h - 20, color_rgb(200, 230, 255), "ticks: ", ticks);
 }
 
 SHIFTOS_NORETURN SHIFTOS_CALL
@@ -74,7 +76,7 @@ void kmain(void) {
 
     for (;;) {
         for (u64 progress = 0; progress <= 100; ++progress) {
-            render_scene(progress, pulse);
+            render_scene(progress, pulse, time_ticks());
 
             if (dir > 0) {
                 if (pulse >= 250) {
