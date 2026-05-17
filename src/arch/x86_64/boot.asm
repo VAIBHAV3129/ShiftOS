@@ -6,9 +6,11 @@ extern kmain
 
 section .text
 _start:
-    mov rsp, stack_top
+    lea rsp, [stack_top]
     xor rbp, rbp
-    call kmain
+    
+    mov rax, kmain
+    call rax
 
 .hang:
     hlt
