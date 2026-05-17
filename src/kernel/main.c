@@ -8,6 +8,17 @@
 #include "color.h"
 #include "time.h"
 
+extern u8 __kernel_start;
+extern u8 __kernel_end;
+extern u8 __text_start;
+extern u8 __text_end;
+extern u8 __rodata_start;
+extern u8 __rodata_end;
+extern u8 __data_start;
+extern u8 __data_end;
+extern u8 __bss_start;
+extern u8 __bss_end;
+
 static void render_scene(u64 progress, u8 pulse, u64 ticks) {
     u64 w = gfx_width();
     u64 h = gfx_height();
@@ -71,13 +82,14 @@ void kmain(void) {
         kpanic("gfx init failed");
     }
 
+    time_init();
+
     u8 pulse = 0;
     int dir = 1;
-    u64 fake_ticks = 0;
 
     for (;;) {
         for (u64 progress = 0; progress <= 100; ++progress) {
-            render_scene(progress, pulse, fake_ticks++);
+            render_scene(progress, pulse, time_ticks());
 
             if (dir > 0) {
                 if (pulse >= 250) {
@@ -93,7 +105,7 @@ void kmain(void) {
                 }
             }
 
-            for (volatile int delay = 0; delay < 5000000; delay++);
+            time_wait(2);
         }
     }
 }
