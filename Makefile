@@ -59,12 +59,15 @@ iso: $(KERNEL_ELF) $(LIMINE_CFG)
 	cp $(LIMINE_CFG) $(ISO_DIR)/LIMINE.CFG
 	cp $(LIMINE_CFG) $(ISO_BOOT_DIR)/limine.cfg
 	cp $(LIMINE_CFG) $(ISO_BOOT_DIR)/LIMINE.CFG
+	cp $(LIMINE_CFG) $(ISO_LIMINE_DIR)/limine.cfg
+	cp $(LIMINE_CFG) $(ISO_LIMINE_DIR)/LIMINE.CFG
 	cp $(LIMINE_DIR)/limine-bios-cd.bin $(ISO_LIMINE_DIR)/
 	cp $(LIMINE_DIR)/limine-bios.sys $(ISO_LIMINE_DIR)/
 	cp $(LIMINE_DIR)/limine-uefi-cd.bin $(ISO_LIMINE_DIR)/
 
 iso-image: iso
-	xorriso -as mkisofs -b limine/limine-bios-cd.bin \
+	xorriso -as mkisofs -R -J \
+		-b limine/limine-bios-cd.bin \
 		-no-emul-boot -boot-load-size 4 -boot-info-table \
 		--efi-boot limine/limine-uefi-cd.bin -efi-boot-part \
 		--efi-boot-image --protective-msdos-label \
