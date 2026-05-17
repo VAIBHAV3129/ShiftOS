@@ -67,17 +67,16 @@ iso: $(KERNEL_ELF) $(LIMINE_CFG)
 	cp $(LIMINE_DIR)/limine-uefi-cd.bin $(ISO_LIMINE_DIR)/
 
 iso-image: iso
-	$(MAKE) -C $(LIMINE_DIR) limine-deploy
 	xorriso -as mkisofs -R -J \
 		-b limine/limine-bios-cd.bin \
 		-no-emul-boot -boot-load-size 4 -boot-info-table \
 		--efi-boot limine/limine-uefi-cd.bin -efi-boot-part \
 		--efi-boot-image --protective-msdos-label \
 		$(ISO_DIR) -o $(ISO_IMAGE)
-	$(LIMINE_DIR)/limine-deploy $(ISO_IMAGE)
+	# $(LIMINE_DIR)/limine-deploy $(ISO_IMAGE)
 
 run: iso-image
-	$(QEMU) -cdrom $(ISO_IMAGE) -m 512M -serial stdio -no-reboot -d cpu_reset,guest_errors
+	$(QEMU) -cdrom $(ISO_IMAGE) -m 512M -serial stdio
 
 clean:
 	rm -rf $(BUILD_DIR)
