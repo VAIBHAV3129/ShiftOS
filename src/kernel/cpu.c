@@ -40,7 +40,7 @@ SHIFTOS_CALL void cpu_pic_remap(void) {
     outb(0xA1, 0x01);
     io_wait();
 
-    outb(0x21, a1);
+    outb(0x21, (u8)(a1 & 0xFE));
     outb(0xA1, a2);
 }
 
