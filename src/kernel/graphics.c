@@ -354,3 +354,44 @@ SHIFTOS_CALL void gfx_draw_window(u64 x, u64 y, u64 w, u64 h, const char *title,
         gfx_draw_text(tx, ty, title, color_rgb(230, 255, 255));
     }
 }
+
+SHIFTOS_CALL void gfx_draw_textf(u64 x, u64 y, u32 color, const char *label, u64 value) {
+    char buf[32];
+    u64 idx = 0;
+
+    if (label) {
+        for (const char *p = label; *p && idx < sizeof(buf) - 1; ++p) {
+            buf[idx++] = *p;
+        }
+    }
+
+    const char digits[] = "0123456789";
+    char num[20];
+    u64 n = value;
+
+    if (n == 0) {
+        num[0] = '0';
+        num[1] = '\0';
+    } else {
+        u64 len = 0;
+        while (n > 0 && len < sizeof(num) - 1) {
+            num[len++] = digits[n % 10];
+            n /= 10;
+        }
+        num[len] = '\0';
+
+        for (u64 i = 0; i < len / 2; ++i) {
+            char tmp = num[i];
+            num[i] = num[len - 1 - i];
+            num[len - 1 - i] = tmp;
+        }
+    }
+
+    for (const char *p = num; *p && idx < sizeof(buf) - 1; ++p) {
+        buf[idx++] = *p;
+    }
+
+    buf[idx] = '\0';
+
+    gfx_draw_text(x, y, buf, color);
+}
