@@ -8,17 +8,6 @@
 #include "color.h"
 #include "time.h"
 
-extern u8 __kernel_start;
-extern u8 __kernel_end;
-extern u8 __text_start;
-extern u8 __text_end;
-extern u8 __rodata_start;
-extern u8 __rodata_end;
-extern u8 __data_start;
-extern u8 __data_end;
-extern u8 __bss_start;
-extern u8 __bss_end;
-
 static void render_scene(u64 progress, u8 pulse, u64 ticks) {
     u64 w = gfx_width();
     u64 h = gfx_height();
@@ -105,7 +94,7 @@ void kmain(void) {
                 }
             }
 
-            time_wait(2);
+            time_wait(1);
         }
     }
 }
