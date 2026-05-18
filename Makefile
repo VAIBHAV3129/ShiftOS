@@ -1,10 +1,10 @@
 ARCH := x86_64
-CC ?= $(shell if command -v x86_64-elf-gcc >/dev/null 2>&1; then echo x86_64-elf-gcc; else echo gcc; fi)
-LD ?= $(shell if command -v x86_64-elf-ld >/dev/null 2>&1; then echo x86_64-elf-ld; else echo ld; fi)
-NASM ?= $(shell command -v nasm)
+CC := x86_64-elf-gcc
+LD := x86_64-elf-ld
+NASM := nasm
 QEMU := qemu-system-x86_64
 
-CFLAGS := -ffreestanding -fno-builtin -fno-stack-protector -fno-pic -mno-red-zone -m64 -nostdlib -Wall -Wextra -O0 -g -mcmodel=kernel
+CFLAGS := -ffreestanding -fno-builtin -fno-stack-protector -fno-pic -mno-red-zone -m64 -nostdlib -Wall -Wextra -O0 -g
 LDFLAGS := -nostdlib -T linker.ld -z max-page-size=0x1000 -z noexecstack --no-warn-rwx-segments
 
 BUILD_DIR := build
@@ -14,12 +14,11 @@ LIMINE_DIR := limine
 
 KERNEL_ELF := $(BUILD_DIR)/shiftos.elf
 KERNEL_MAP := $(BUILD_DIR)/shiftos.map
-LIMINE_CFG := $(BOOT_DIR)/limine.conf
+LIMINE_CFG := $(BOOT_DIR)/limine.cfg
 
 ISO_DIR := $(BUILD_DIR)/iso
 ISO_BOOT_DIR := $(ISO_DIR)/boot
 ISO_LIMINE_DIR := $(ISO_DIR)/limine
-ISO_EFI_BOOT_DIR := $(ISO_DIR)/EFI/BOOT
 ISO_IMAGE := $(BUILD_DIR)/shiftos.iso
 
 C_SOURCES := src/kernel/main.c \
@@ -55,28 +54,19 @@ $(OBJ_DIR)/%.o: src/%.asm
 iso: $(KERNEL_ELF) $(LIMINE_CFG)
 	@mkdir -p $(ISO_BOOT_DIR)
 	@mkdir -p $(ISO_LIMINE_DIR)
-	@mkdir -p $(ISO_EFI_BOOT_DIR)
-
 	cp $(KERNEL_ELF) $(ISO_BOOT_DIR)/shiftos.elf
-
-	# copy config to all valid locations
-	cp $(LIMINE_CFG) $(ISO_DIR)/limine.conf
-	cp $(LIMINE_CFG) $(ISO_BOOT_DIR)/limine.conf
-	cp $(LIMINE_CFG) $(ISO_LIMINE_DIR)/limine.conf
-
+	cp $(LIMINE_CFG) $(ISO_DIR)/limine.cfg
 	cp $(LIMINE_DIR)/limine-bios-cd.bin $(ISO_LIMINE_DIR)/
 	cp $(LIMINE_DIR)/limine-bios.sys $(ISO_LIMINE_DIR)/
 	cp $(LIMINE_DIR)/limine-uefi-cd.bin $(ISO_LIMINE_DIR)/
-	cp $(LIMINE_DIR)/BOOTX64.EFI $(ISO_EFI_BOOT_DIR)/
-	cp $(LIMINE_DIR)/BOOTIA32.EFI $(ISO_EFI_BOOT_DIR)/
 
 iso-image: iso
-	xorriso -as mkisofs -R -J \
-		-b limine/limine-bios-cd.bin \
+	xorriso -as mkisofs -b limine/limine-bios-cd.bin \
 		-no-emul-boot -boot-load-size 4 -boot-info-table \
 		--efi-boot limine/limine-uefi-cd.bin -efi-boot-part \
 		--efi-boot-image --protective-msdos-label \
 		$(ISO_DIR) -o $(ISO_IMAGE)
+	$(LIMINE_DIR)/limine-deploy $(ISO_IMAGE)
 
 run: iso-image
 	$(QEMU) -cdrom $(ISO_IMAGE) -m 512M -serial stdio
