@@ -21,4 +21,4 @@ All suggestions are welcome
 
 
 ---------------------------------------
-AI was used i specific scenarios, only when I had no idea what to do next and for code verifications, suggestions and debuggging purposes
+AI was used in specific scenarios, only when I had no idea what to do next and for code verifications, suggestions and debuggging purposes
