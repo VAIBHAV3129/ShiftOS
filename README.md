@@ -22,3 +22,9 @@ All suggestions are welcome
 
 ---------------------------------------
 AI was used in specific scenarios, only when I had no idea what to do next and for code verifications, suggestions and debuggging purposes
+
+
+
+
+
+WIP
