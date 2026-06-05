@@ -15,3 +15,10 @@ The Limine files are from the official source and was not mine,I used it to make
 This is my first big venture , a really ambitious project of makiing an OS completely from scratch with pure C and NASM
 
 All suggestions are welcome
+
+
+
+
+
+---------------------------------------
+AI was used i specific scenarios, only when I had no idea what to do next and for code verifications, suggestions and debuggging purposes
