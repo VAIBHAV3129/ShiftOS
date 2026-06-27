@@ -13,6 +13,7 @@ A 64-bit x86_64 kernel (ShiftOS) featuring a 32-to-64 bit bootstrap, 4-level pag
 The Limine files are from the official source and was not mine,I used it to make my project a lot more easier to manage
 
 This is my first big venture , a really ambitious project of makiing an OS completely from scratch with pure C and NASM
+this os runs without any heavy dependencies by utilizing modern limine structure to form th x64
 
 All suggestions are welcome
 
@@ -27,4 +28,4 @@ AI was used in specific scenarios, only when I had no idea what to do next and f
 
 
 
-WIP
+\
