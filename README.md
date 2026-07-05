@@ -5,27 +5,39 @@
 
 -------------------------------------------
 
-
+## What is ShiftOS?
 
 A 64-bit x86_64 kernel (ShiftOS) featuring a 32-to-64 bit bootstrap, 4-level paging, a kernel-space memory manager, and preemptive multitasking.
 
-
-The Limine files are from the official source and was not mine,I used it to make my project a lot more easier to manage
+## Intro
 
 This is my first big venture , a really ambitious project of makiing an OS completely from scratch with pure C and NASM
-this os runs without any heavy dependencies by utilizing modern limine structure to form th x64
+this os runs without any heavy dependencies by utilizing modern limine structure to form the x64
+
 
 All suggestions are welcome
 
+
+ This was a project that I had wanted to make for a very long time , but never got to do it, but one on one fine Sunday morning ,with a hot cup of coffee I sat down to create my own OS , and that is ShiftOS
+I faced several problems along the way ,but scrolling through the long lines of code and fixing each and every error and panic message was exactly what made this project mmore interesting for me, on the other hand I was also exremely frustrated at some points where I had help from my friends or the trusty AI( all it did was give me nonsense ideas and wrong debug code)
+
+----------
+-----------------
+Anyways, i am partly happy as I have completed the first phase of my project, and next I plan to complete it to form a full fledged OS, that will be capable of a few basic computations and alos run
+- Custom Command-Line Shell
+- Basic Internal Apps
+- set up a true IDT (Interrupt Descriptor Table)
+- and complete the memory allocation work
+- and maybe run a simple game
+
+
+All these changes will be implemented in the subsequent iteration of the OS
 
 
 
 
 ---------------------------------------
-AI was used in specific scenarios, only when I had no idea what to do next and for code verifications, suggestions and debuggging purposes
-
-
-
-
-
-\
+## Disclaimer
+- The Limine files are from the official source and was not mine,I used it to make my project a lot more easier to manage
+- AI was used in specific scenarios, only when I had no idea what to do next and for code verifications, suggestions and debuggging purposes
+- The Banner Image was made with Canva
