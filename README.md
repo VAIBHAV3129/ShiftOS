@@ -20,6 +20,7 @@ All suggestions are welcome
 
  This was a project that I had wanted to make for a very long time , but never got to do it, but one on one fine Sunday morning ,with a hot cup of coffee I sat down to create my own OS , and that is ShiftOS
 I faced several problems along the way ,but scrolling through the long lines of code and fixing each and every error and panic message was exactly what made this project mmore interesting for me, on the other hand I was also exremely frustrated at some points where I had help from my friends or the trusty AI( all it did was give me nonsense ideas and wrong debug code)
+<img width="900" height="603" alt="Screen Shot 2026-05-17 at 17 21 02 PM" src="https://github.com/user-attachments/assets/5bebd6d8-0b12-463c-884a-a2e74a7b4c50" />
 
 ----------
 -----------------
