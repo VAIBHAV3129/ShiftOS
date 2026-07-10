@@ -40,4 +40,5 @@ All these changes will be implemented in the subsequent iteration of the OS
 ## Disclaimer
 - The Limine files are from the official source and was not mine,I used it to make my project a lot more easier to manage
 - AI was used in specific scenarios, only when I had no idea what to do next and for code verifications, suggestions and debuggging purposes
+(I used Github Copilot for specific parts of my code, and for debugging purpose, other wise all the code was handwritten by me. also used Gemini to help me solve the panic messages)
 - The Banner Image was made with Canva
